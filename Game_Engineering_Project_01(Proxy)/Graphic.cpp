@@ -3,11 +3,9 @@
 
 using namespace std;
 
-Graphic::Graphic() {
-}
+Graphic::Graphic() {}
 
-Graphic::~Graphic() {
-}
+Graphic::~Graphic() {}
 
 void Graphic::Draw()
 {

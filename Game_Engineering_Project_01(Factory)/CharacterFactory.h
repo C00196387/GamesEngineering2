@@ -7,10 +7,12 @@
 class CharacterFactory : public Factory 
 {
 public:
-	Character* CreatePlayer() {
+	Character* CreatePlayer() 
+	{
 		return new Player;
 	}
-	Character* CreateOpponents() {
+	Character* CreateOpponents() 
+	{
 		return new Boss;
 	}
 };
