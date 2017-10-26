@@ -1,0 +1,6 @@
+﻿  main.cpp
+c:\users\pixir\desktop\college stuff\gamesengineering2\game_engineering_project_04(ecm)\main.cpp(60): warning C4838: conversion from 'Uint32' to 'int' requires a narrowing conversion
+  AISystem.cpp
+  Generating Code...
+  Game_Engineering_Project.vcxproj -> C:\Users\pixir\Desktop\College Stuff\GamesEngineering2\Game_Engineering_Project_04(ECM)\x64\Debug\Game_Engineering_Project.exe
+  Game_Engineering_Project.vcxproj -> C:\Users\pixir\Desktop\College Stuff\GamesEngineering2\Game_Engineering_Project_04(ECM)\x64\Debug\Game_Engineering_Project.pdb (Partial PDB)

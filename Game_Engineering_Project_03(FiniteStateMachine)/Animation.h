@@ -4,6 +4,7 @@
 class Animation
 {
 	class State* current;
+
 public:
 	Animation(int * x);
 	void setCurrent(State* s)

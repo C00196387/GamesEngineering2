@@ -1,0 +1,80 @@
+#include <SDL.h>
+#include <SDL_image.h>
+#include <iostream>
+#include <thread>
+#include <chrono>
+#include "SDL_thread.h"
+#include "HealthComponent.h"
+#include "AISystem.h"
+
+#include "InputHandler.h"
+
+int main(int argc, char* argv[])
+{
+	SDL_Init(SDL_INIT_EVERYTHING);
+	//IMG_Init(IMG_INIT_PNG);
+	SDL_Event e;
+
+	AISystem ais;
+	//PositionSystem ps;
+
+	HealthComponent hc;
+	//PositionComponent pc;
+
+	bool end = false;
+
+	int spriteState = 0;
+
+	int i = 0;
+
+	Entity player;
+	player.id = 0;
+
+	player.addComponent(hc); 
+	//player.addComponent(pc);
+
+	ais.addEntity(player); 
+	//ps.addEntity(player);
+
+	//SDL Render Window Stuff
+	InputHandler input = InputHandler(&e);
+
+	SDL_Window * window = SDL_CreateWindow("SDL2 Keyboard/Mouse events", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 200, 200, 0);
+	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
+	SDL_Surface * image = IMG_Load("Resources/DebugSheet.png");
+	SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer,image);
+
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+	//Gameloop
+	while (!end)
+	{
+
+		ais.update();
+		//ps.update();
+
+		Uint32 ticks = SDL_GetTicks();
+		Uint32 seconds = ticks / 1000;
+		Uint32 sprite = seconds % 2;
+
+		SDL_Rect srcrect = { sprite * 48, spriteState * 48, 48, 48 };
+		SDL_Rect dstrect = { 10, 10, 48, 48 };
+
+		input.handleInput();
+
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, texture, &srcrect, &dstrect);
+		SDL_RenderPresent(renderer);
+	}
+	return 0;
+
+
+	SDL_DestroyTexture(texture);
+	SDL_FreeSurface(image);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	IMG_Quit();
+	SDL_Quit();
+
+	return 0;
+}
