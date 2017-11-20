@@ -34,13 +34,12 @@ int main(int argc, char* argv[])
 	//Gameloop
 	while (!end)
 	{
-
 		Uint32 ticks = SDL_GetTicks();
 		Uint32 seconds = ticks / 1000;
 		Uint32 sprite = seconds % 2;
 
 		SDL_Rect srcrect = { sprite * 48, spriteState * 48, 48, 48 };
-		SDL_Rect dstrect = { 10, 10, 48, 48 };
+		SDL_Rect dstrect = { 10, 200, 48, 48 };
 
 		input.handleInput();
 		fsm.update();

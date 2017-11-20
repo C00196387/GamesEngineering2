@@ -1,10 +1,4 @@
-﻿  Animation.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  main.cpp
-  MacroCommand.cpp
-  Jump.cpp
-  InputHandler.cpp
-  Climb.cpp
+﻿  main.cpp
+c:\users\pixir\desktop\college stuff\gamesengineering2\game_engineering_project_03(finitestatemachine)\main.cpp(41): warning C4838: conversion from 'Uint32' to 'int' requires a narrowing conversion
   Game_Engineering_Project.vcxproj -> C:\Users\pixir\Desktop\College Stuff\GamesEngineering2\Game_Engineering_Project_03(FiniteStateMachine)\x64\Debug\Game_Engineering_Project.exe
   Game_Engineering_Project.vcxproj -> C:\Users\pixir\Desktop\College Stuff\GamesEngineering2\Game_Engineering_Project_03(FiniteStateMachine)\x64\Debug\Game_Engineering_Project.pdb (Partial PDB)

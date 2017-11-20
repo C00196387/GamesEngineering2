@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include <typeinfo>
 
-void Entity::removeComponent(Component c)
+void Entity::removeComponent(Component* c)
 {
 	for (int i = 0; i < m_components.size(); i++)
 	{

@@ -6,6 +6,8 @@
 #include "SDL_thread.h"
 #include "HealthComponent.h"
 #include "AISystem.h"
+#include "PositionComponent.h"
+#include "RenderSystem.h"
 
 #include "InputHandler.h"
 
@@ -16,10 +18,9 @@ int main(int argc, char* argv[])
 	SDL_Event e;
 
 	AISystem ais;
-	//PositionSystem ps;
+	RenderSystem rs;
 
 	HealthComponent hc;
-	//PositionComponent pc;
 
 	bool end = false;
 
@@ -28,13 +29,27 @@ int main(int argc, char* argv[])
 	int i = 0;
 
 	Entity player;
-	player.id = 0;
+	Entity cat;
+	Entity dog;
+	Entity alien;
 
-	player.addComponent(hc); 
-	//player.addComponent(pc);
+	cat.addComponent(new PositionComponent());
+	cat.addComponent(new HealthComponent());
 
-	ais.addEntity(player); 
-	//ps.addEntity(player);
+	dog.addComponent(new PositionComponent());
+	dog.addComponent(new HealthComponent());
+
+	alien.addComponent(new PositionComponent());
+	alien.addComponent(new HealthComponent());
+
+	ais.addEntity(&cat);
+	ais.addEntity(&alien);
+	ais.addEntity(&dog);
+
+	rs.addEntity(&player);
+	rs.addEntity(&cat);
+	rs.addEntity(&alien);
+	rs.addEntity(&dog);
 
 	//SDL Render Window Stuff
 	InputHandler input = InputHandler(&e);
@@ -46,24 +61,25 @@ int main(int argc, char* argv[])
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
+	int timer = 0;
+
 	//Gameloop
 	while (!end)
 	{
-
-		ais.update();
-		//ps.update();
-
-		Uint32 ticks = SDL_GetTicks();
-		Uint32 seconds = ticks / 1000;
-		Uint32 sprite = seconds % 2;
-
-		SDL_Rect srcrect = { sprite * 48, spriteState * 48, 48, 48 };
-		SDL_Rect dstrect = { 10, 10, 48, 48 };
+		if (timer <= 0)
+		{
+			ais.update();
+			rs.update();
+			timer = 10000;
+		}
+		else
+		{
+			timer--;
+		}
 
 		input.handleInput();
 
 		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, texture, &srcrect, &dstrect);
 		SDL_RenderPresent(renderer);
 	}
 	return 0;
