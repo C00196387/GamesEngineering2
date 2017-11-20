@@ -8,6 +8,7 @@
 #include "AISystem.h"
 #include "PositionComponent.h"
 #include "RenderSystem.h"
+#include "ControlSystem.h"
 
 #include "InputHandler.h"
 
@@ -15,7 +16,6 @@ int main(int argc, char* argv[])
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	//IMG_Init(IMG_INIT_PNG);
-	SDL_Event e;
 
 	AISystem ais;
 	RenderSystem rs;
@@ -33,6 +33,12 @@ int main(int argc, char* argv[])
 	Entity dog;
 	Entity alien;
 
+	ControlSystem cs;
+
+	player.addComponent(new HealthComponent);
+	player.addComponent(new PositionComponent);
+	player.addComponent(new ControlComponent);
+
 	cat.addComponent(new PositionComponent());
 	cat.addComponent(new HealthComponent());
 
@@ -46,14 +52,14 @@ int main(int argc, char* argv[])
 	ais.addEntity(&alien);
 	ais.addEntity(&dog);
 
+	cs.addEntity(&player);
+
 	rs.addEntity(&player);
 	rs.addEntity(&cat);
 	rs.addEntity(&alien);
 	rs.addEntity(&dog);
 
 	//SDL Render Window Stuff
-	InputHandler input = InputHandler(&e);
-
 	SDL_Window * window = SDL_CreateWindow("SDL2 Keyboard/Mouse events", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 200, 200, 0);
 	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
 	SDL_Surface * image = IMG_Load("Resources/DebugSheet.png");
@@ -66,6 +72,7 @@ int main(int argc, char* argv[])
 	//Gameloop
 	while (!end)
 	{
+		cs.update();
 		if (timer <= 0)
 		{
 			ais.update();
@@ -76,8 +83,6 @@ int main(int argc, char* argv[])
 		{
 			timer--;
 		}
-
-		input.handleInput();
 
 		SDL_RenderClear(renderer);
 		SDL_RenderPresent(renderer);

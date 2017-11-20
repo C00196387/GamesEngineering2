@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "SDL_keyboard.h"
+#include <iostream>
 
 class InputHandler
 {
@@ -9,12 +10,9 @@ public:
 
 	InputHandler() {};
 
-	InputHandler(SDL_Event * e) { m_e = e;}
-
-	void handleInput();
+	void handleInput(SDL_Event * e);
 
 private:
 
-	SDL_Event * m_e;
 
 };

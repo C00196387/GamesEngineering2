@@ -4,12 +4,11 @@
 class ControlComponent :public Component
 {
 public:
-	ControlComponent(SDL_Event *e)
+	ControlComponent()
 	{ 
-		input = InputHandler(e); 
 	};
 
-	InputHandler getInputHandler(int value)
+	InputHandler getInputHandler()
 	{
 		return input;
 	};

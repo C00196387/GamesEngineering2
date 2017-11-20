@@ -1,41 +1,48 @@
 #include "InputHandler.h"
 
 
-void InputHandler::handleInput()
+void InputHandler::handleInput(SDL_Event * e)
 {
-	SDL_PollEvent(m_e);
-	switch (m_e->type)
+	SDL_PollEvent(e);
+	switch (e->type)
 	{
 	case SDL_KEYDOWN:
 	{
-		switch (m_e->key.keysym.sym)
+		switch (e->key.keysym.sym)
 		{
 		case SDLK_LCTRL:
 		{
+			std::cout << "CTRL Pressed" << std::endl;
 			break;
 		}
 		case SDLK_SPACE:
 		{
+			std::cout << "SPACE Pressed" << std::endl;
 			break;
 		}
 		case SDLK_z:
 		{
+			std::cout << "Z Pressed" << std::endl;
 			break;
 		}
 		case SDLK_x:
 		{
+			std::cout << "X Pressed" << std::endl;
 			break;
 		}
 		case SDLK_y:
 		{
+			std::cout << "Y Pressed" << std::endl;
 			break;
 		}
 		case SDLK_n:
 		{
+			std::cout << "N Pressed" << std::endl;
 			break;
 		}
 		case SDLK_m:
 		{
+			std::cout << "M Pressed" << std::endl;
 			break;
 		}
 		default:
@@ -47,7 +54,7 @@ void InputHandler::handleInput()
 	}
 	case SDL_KEYUP:
 	{
-		switch (m_e->key.keysym.sym)
+		switch (e->key.keysym.sym)
 		{
 		case SDLK_LCTRL:
 		{
