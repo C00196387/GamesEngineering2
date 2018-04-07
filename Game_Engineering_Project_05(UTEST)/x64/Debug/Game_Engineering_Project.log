@@ -1,8 +1,10 @@
-﻿  AISystem.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
+﻿  RenderSystem.cpp
   main.cpp
-  RenderSystem.cpp
+  InputHandler.cpp
+  AISystem.cpp
+  Entity.cpp
   ControlSystem.cpp
+  ControlComponent.h
+  Generating Code...
   Game_Engineering_Project.vcxproj -> C:\Users\pixir\Desktop\College Stuff\GamesEngineering2\Game_Engineering_Project_05(UTEST)\x64\Debug\Game_Engineering_Project.exe
   Game_Engineering_Project.vcxproj -> C:\Users\pixir\Desktop\College Stuff\GamesEngineering2\Game_Engineering_Project_05(UTEST)\x64\Debug\Game_Engineering_Project.pdb (Partial PDB)
