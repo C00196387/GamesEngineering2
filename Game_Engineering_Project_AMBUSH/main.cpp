@@ -16,20 +16,27 @@
 #include "EventListener.h"
 #include "InputManager.h"
 #include "Player.h"
+#include "Hunter.h"
 #include "Wall.h"
+#include "LTimer.h"
+
+#include "Graph.h"
 
 //Data access semaphore
 SDL_sem* gDataLock = NULL;
-
-//The "data buffer"
-int gData = -1;
 
 const int speed = 10;
 
 std::vector<Rectangle*> rectPool;
 std::vector<Entity*> entityPool;
+std::vector<Hunter*> hunterPool;
+
+Graph graph;
 
 int collisionIndex = -1;
+int pathFindingIndex = -1;
+
+bool quit = false;
 
 EventListener * listener;
 
@@ -55,11 +62,10 @@ void close()
 
 int Collision(void* data)
 {
-
 	srand(SDL_GetTicks());
 	int index = -1;
 
-	while(true)
+	while(!quit)
 	{
 		//SDL_Delay(15);
 		SDL_SemWait(gDataLock);
@@ -82,6 +88,35 @@ int Collision(void* data)
 	return 0;
 }
 
+int PathFinding(void* data)
+{
+	srand(SDL_GetTicks());
+	int index = -1;
+
+	while (!quit)
+	{
+		SDL_Delay(15);
+		SDL_SemWait(gDataLock);
+		pathFindingIndex++;
+		if (pathFindingIndex >= hunterPool.size())
+		{
+			pathFindingIndex = 0;
+		}
+		index = pathFindingIndex;
+		if (index >= hunterPool.size())
+		{
+			index = 0;
+		}
+		SDL_SemPost(gDataLock);
+		hunterPool.at(index)->PathFind(&entityPool);
+		SDL_Delay(5);
+	}
+
+	printf("%s finished!\n\n", data);
+
+	return 0;
+}
+
 int main()
 {
 	gDataLock = SDL_CreateSemaphore(1);
@@ -94,6 +129,41 @@ int main()
 		}
 	}
 
+	graph.AddNode(19 * 2, 350, "Dublin");
+
+	graph.AddNode(19 * 5, 50, "Kildare");
+	graph.AddNode(19 * 5, 550, "Naas");
+
+	graph.AddNode(19 * 15, 370, "Carlow");
+	graph.AddNode(19 * 15, 450, "Tullow");
+
+	graph.AddNode(19 * 25, 50, "Galway");
+	graph.AddNode(19 * 25, 550, "Salt Hill");
+
+	graph.AddNode(19 * 28, 350, "London");
+
+	graph.AddArc("Dublin", "Kildare");
+	graph.AddArc("Dublin", "Naas");
+
+	graph.AddArc("Kildare", "Carlow");
+	graph.AddArc("Kildare", "Tullow");
+	graph.AddArc("Naas", "Carlow");
+	graph.AddArc("Naas", "Tullow");
+
+	graph.AddArc("Galway", "Carlow");
+	graph.AddArc("Galway", "Tullow");
+	graph.AddArc("Salt Hill", "Carlow");
+	graph.AddArc("Salt Hill", "Tullow");
+
+	graph.AddArc("London", "Galway");
+	graph.AddArc("London", "Salt Hill");
+
+	for (int i = 0; i < graph.GraphSize(); i++)
+	{
+		rectPool.push_back(new Rectangle(graph.GetNode(i)->x, graph.GetNode(i)->y, 19, 19, SDL_Color{ 150,0,150, 150 }));
+	}
+
+
 	entityPool.push_back(new Player(19*2, 19*2, 19, 19));
 
 	//Wall
@@ -103,53 +173,111 @@ int main()
 	entityPool.push_back(new Wall(608-19, 0, 19, 608));
 	//
 
-	entityPool.push_back(new Wall(19 * 5, 0, 19, 350));
-	entityPool.push_back(new Wall(19 * 10, 300, 19, 350));
+	//
+	entityPool.push_back(new Wall(19 * 5, 200, 19, 300));
 	entityPool.push_back(new Wall(19 * 15, 0, 19, 350));
-	entityPool.push_back(new Wall(19 * 20, 300, 19, 350));
-	entityPool.push_back(new Wall(19 * 25, 0, 19, 350));
+	entityPool.push_back(new Wall(19 * 25, 200, 19, 300));
+	//
+	for (int i = 0; i < 500; i++)
+	{
+		hunterPool.push_back(new Hunter(19 * 27, 300, 10, 10, &graph));
+		entityPool.push_back(hunterPool.back());
+	}
 
 	for (int i = 0; i < entityPool.size(); i++)
 	{
 		rectPool.push_back(entityPool.at(i)->Rect());
 	}
 
-	//Main loop flag
-	bool quit = false;
-
 	//Event handler
 	SDL_Event e;
 
-	//Run the threads
+	listener = new EventListener();
+
 	srand(SDL_GetTicks());
-	SDL_Thread* threadA = SDL_CreateThread(Collision, "Thread A", (void*)"Thread A");						   
+	SDL_Thread* threadA = SDL_CreateThread(Collision, "Thread A", (void*)"Thread A");	
+	SDL_Delay(1);
 	SDL_Thread* threadB = SDL_CreateThread(Collision, "Thread B", (void*)"Thread B");
 
-	listener = new EventListener();
+	SDL_Delay(1);
+
+	SDL_Thread* threadC = SDL_CreateThread(PathFinding, "Thread C", (void*)"Thread C");
+	SDL_Delay(1);						   
+	SDL_Thread* threadD = SDL_CreateThread(PathFinding, "Thread D", (void*)"Thread D");
 
 	InputManager inputManager = InputManager(listener, &e);
 
-	//While application is running
+	unsigned int lastTime = 0;
+	float deltaTime = 0;
+	unsigned int currentTime = 0;
+	srand(time(NULL));
+	bool debug = false;
+	srand(time(NULL));
+	const int SCREEN_FPS = 60;
+	const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
+	LTimer fpsTimer;
+	LTimer capTimer;
+	int countedFrames = 0;
+	fpsTimer.start();
+
 	while (!quit)
 	{
 
-		inputManager.handleInput();
-
-		entityPool.at(0)->Update(listener);
-
-		//Render Code
-		SDL_SetRenderDrawColor(gameRenderer, 100, 0, 0, 0);
-		SDL_RenderClear(gameRenderer);
-
-		for (int i = 0; i < rectPool.size(); i++)
+		int avgFPS = countedFrames / (fpsTimer.getTicks() / 1000.f);
+		if (avgFPS > 2000000)
 		{
-			rectPool.at(i)->Draw(*gameRenderer);
+			avgFPS = 0;
 		}
 
-		SDL_RenderPresent(gameRenderer);
+		if (avgFPS > 1)
+		{
+
+		}
+		++countedFrames;
+
+		int frameTicks = capTimer.getTicks();
+
+		if (frameTicks < SCREEN_TICKS_PER_FRAME)
+		{
+			SDL_Delay(SCREEN_TICKS_PER_FRAME - frameTicks);
+
+			currentTime = SDL_GetTicks();
+			if (currentTime > lastTime)
+			{
+				deltaTime = ((float)(currentTime - lastTime)) / 1000;
+
+				lastTime = currentTime;
+
+				inputManager.handleInput();
+
+				for (int i = 0; i < entityPool.size(); i++)
+				{
+					entityPool.at(i)->Update(listener);
+				}
+
+				//Render Code
+				SDL_SetRenderDrawColor(gameRenderer, 100, 0, 0, 0);
+				SDL_RenderClear(gameRenderer);
+
+				for (int i = 0; i < rectPool.size(); i++)
+				{
+					rectPool.at(i)->Draw(*gameRenderer);
+				}
+				for (int i = 0; i < graph.GraphSize(); i++)
+				{
+					for (int j = 0; j < graph.GetNode(i)->arc.size(); j++)
+					{
+						SDL_SetRenderDrawColor(gameRenderer, 0, 100, 0, 0);
+						SDL_RenderDrawLine(gameRenderer, graph.GetNode(i)->arc.at(j)->x + 9, graph.GetNode(i)->arc.at(j)->y+9, graph.GetNode(i)->x+9, graph.GetNode(i)->y+9);
+					}
+				}
+
+				SDL_RenderPresent(gameRenderer);
+			}
+		}
 	}
 
 	//Wait for threads to finish
-	SDL_WaitThread(threadA, NULL);
-	SDL_WaitThread(threadB, NULL);
+	//SDL_WaitThread(threadA, NULL);
+	//SDL_WaitThread(threadB, NULL);
 }

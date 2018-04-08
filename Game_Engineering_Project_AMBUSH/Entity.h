@@ -18,6 +18,8 @@ public:
 	float *VelocityX() { return &velocityX; };
 	float *VelocityY() { return &velocityY; };
 
+	std::string type = "none";
+
 protected:
 	Rectangle * m_rect;
 

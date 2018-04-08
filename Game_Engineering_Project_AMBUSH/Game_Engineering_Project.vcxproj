@@ -128,7 +128,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Hunter.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="LTimer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rectangle.cpp" />
@@ -138,7 +140,10 @@
   <ItemGroup>
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EventListener.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="Hunter.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="LTimer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="ThreadPoolSDL.h" />
