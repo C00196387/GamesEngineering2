@@ -95,7 +95,7 @@ int PathFinding(void* data)
 
 	while (!quit)
 	{
-		SDL_Delay(15);
+		//SDL_Delay(1);
 		SDL_SemWait(gDataLock);
 		pathFindingIndex++;
 		if (pathFindingIndex >= hunterPool.size())
@@ -109,7 +109,7 @@ int PathFinding(void* data)
 		}
 		SDL_SemPost(gDataLock);
 		hunterPool.at(index)->PathFind(&entityPool);
-		SDL_Delay(5);
+		//SDL_Delay(1);
 	}
 
 	printf("%s finished!\n\n", data);
@@ -121,49 +121,6 @@ int main()
 {
 	gDataLock = SDL_CreateSemaphore(1);
 
-	for (int i = 0; i < 32; i++)
-	{
-		for (int j = 0; j < 32; j++)
-		{
-			rectPool.push_back(new Rectangle(i * 19, j * 19, 19, 19, SDL_Color{ 50,0,0, 150 }));
-		}
-	}
-
-	graph.AddNode(19 * 2, 350, "Dublin");
-
-	graph.AddNode(19 * 5, 50, "Kildare");
-	graph.AddNode(19 * 5, 550, "Naas");
-
-	graph.AddNode(19 * 15, 370, "Carlow");
-	graph.AddNode(19 * 15, 450, "Tullow");
-
-	graph.AddNode(19 * 25, 50, "Galway");
-	graph.AddNode(19 * 25, 550, "Salt Hill");
-
-	graph.AddNode(19 * 28, 350, "London");
-
-	graph.AddArc("Dublin", "Kildare");
-	graph.AddArc("Dublin", "Naas");
-
-	graph.AddArc("Kildare", "Carlow");
-	graph.AddArc("Kildare", "Tullow");
-	graph.AddArc("Naas", "Carlow");
-	graph.AddArc("Naas", "Tullow");
-
-	graph.AddArc("Galway", "Carlow");
-	graph.AddArc("Galway", "Tullow");
-	graph.AddArc("Salt Hill", "Carlow");
-	graph.AddArc("Salt Hill", "Tullow");
-
-	graph.AddArc("London", "Galway");
-	graph.AddArc("London", "Salt Hill");
-
-	for (int i = 0; i < graph.GraphSize(); i++)
-	{
-		rectPool.push_back(new Rectangle(graph.GetNode(i)->x, graph.GetNode(i)->y, 19, 19, SDL_Color{ 150,0,150, 150 }));
-	}
-
-
 	entityPool.push_back(new Player(19*2, 19*2, 19, 19));
 
 	//Wall
@@ -174,10 +131,30 @@ int main()
 	//
 
 	//
-	entityPool.push_back(new Wall(19 * 5, 200, 19, 300));
-	entityPool.push_back(new Wall(19 * 15, 0, 19, 350));
-	entityPool.push_back(new Wall(19 * 25, 200, 19, 300));
+	entityPool.push_back(new Wall(19 * 5, 19*20, 19, 300));
+	entityPool.push_back(new Wall(19 * 15, 19*5, 19, 350));
+	entityPool.push_back(new Wall(19 * 20, 19 * 20, 19, 100));
 	//
+	for (int i = 0; i < 32; i++)
+	{
+		for (int j = 0; j < 32; j++)
+		{
+			bool solid = false;
+			rectPool.push_back(new Rectangle(i * 19, j * 19, 19, 19, SDL_Color{ 50,0,0, 150 }));
+			for (int k = 0; k < entityPool.size(); k++)
+			{
+				SDL_Rect p1{ entityPool.at(k)->Rect()->X, entityPool.at(k)->Rect()->Y, entityPool.at(k)->Rect()->Width, entityPool.at(k)->Rect()->Height };
+				SDL_Rect p2{ i * 19, j * 19, 19, 19 };
+				if (SDL_HasIntersection(&p1, &p2) && k != 0)
+				{
+					solid = true;
+				}
+			}
+			graph.AddNode(i * 19, j * 19, solid);
+		}
+	}
+	graph.GenerateGraph();
+
 	for (int i = 0; i < 500; i++)
 	{
 		hunterPool.push_back(new Hunter(19 * 27, 300, 10, 10, &graph));
@@ -258,6 +235,7 @@ int main()
 				//Render Code
 				SDL_SetRenderDrawColor(gameRenderer, 100, 0, 0, 0);
 				SDL_RenderClear(gameRenderer);
+
 
 				for (int i = 0; i < rectPool.size(); i++)
 				{

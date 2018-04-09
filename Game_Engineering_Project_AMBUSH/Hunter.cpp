@@ -46,7 +46,7 @@ void Hunter::Collision(std::vector<Entity*>* e)
 {
 	for (int i = 0; i < 9; i++)
 	{
-		if (e->at(i) != this && e->at(i)->type != "Enemy")
+		if (e->at(i) != this && e->at(i)->type != "Enemy" && e->at(i)->type != "Player")
 		{
 			SDL_Rect r1 = SDL_Rect({ m_rect->X, m_rect->Y, m_rect->Width, m_rect->Height });
 			SDL_Rect r2 = SDL_Rect({ e->at(i)->Rect()->X, e->at(i)->Rect()->Y, e->at(i)->Rect()->Width, e->at(i)->Rect()->Height });
@@ -93,7 +93,7 @@ void Hunter::PathFind(std::vector<Entity*>* entity)
 	for (int i = 0; i < graphPointer->GraphSize(); i++)
 	{
 		float temp = sqrt(((graphPointer->GetNode(i)->x - m_rect->X) * (graphPointer->GetNode(i)->x - m_rect->X)) + ((graphPointer->GetNode(i)->y - m_rect->Y) * (graphPointer->GetNode(i)->y - m_rect->Y)));
-		if (distance > temp)
+		if (distance > temp && !graphPointer->GetNode(i)->solid)
 		{
 			distance = temp;
 			position1 = graphPointer->GetNode(i);
@@ -105,7 +105,7 @@ void Hunter::PathFind(std::vector<Entity*>* entity)
 	for (int i = 0; i < graphPointer->GraphSize(); i++)
 	{
 		float temp = sqrt(((graphPointer->GetNode(i)->x - entity->at(0)->Rect()->X) * (graphPointer->GetNode(i)->x - entity->at(0)->Rect()->X)) + ((graphPointer->GetNode(i)->y - entity->at(0)->Rect()->Y) * (graphPointer->GetNode(i)->y - entity->at(0)->Rect()->Y)));
-		if (distance > temp)
+		if (distance > temp && !graphPointer->GetNode(i)->solid)
 		{
 			distance = temp;
 			position2 = graphPointer->GetNode(i);

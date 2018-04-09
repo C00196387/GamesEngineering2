@@ -5,6 +5,7 @@
 Player::Player(int x, int y, int width, int height)
 {
 	m_rect = new Rectangle(x, y, width, height, SDL_Color{ 250,200,0, 150 });
+	type = "Player";
 }
 
 
@@ -76,7 +77,7 @@ void Player::Collision(std::vector<Entity*>* e)
 {
 	for (int i = 0; i < e->size(); i++)
 	{
-		if (e->at(i) != this)
+		if (e->at(i) != this && e->at(i)->type != "Enemy" && e->at(i)->type != "Player")
 		{
 			SDL_Rect r1 = SDL_Rect({ m_rect->X, m_rect->Y, m_rect->Width, m_rect->Height });
 			SDL_Rect r2 = SDL_Rect({ e->at(i)->Rect()->X, e->at(i)->Rect()->Y, e->at(i)->Rect()->Width, e->at(i)->Rect()->Height });

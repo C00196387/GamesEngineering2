@@ -1,9 +1,9 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <vector>
 #include <queue>
 #include <list>
+#include <vector>
 #include <iostream>
 
 //!Node
@@ -12,16 +12,14 @@ class Node
 {
 public:
 
-	Node(int xholder, int yholder, std::string n)
+	Node(int xholder, int yholder, bool solidholder)
 	{
 		x = xholder;
 		y = yholder;
-		solid = false;
-		name = n;
+		solid = solidholder;
 	};
 	~Node() {};
 
-	std::string name;
 	int x;
 	int y;
 	int weight;
@@ -44,21 +42,59 @@ public:
 
 	//!Add Node
 	/*! Adds a node to the vector.*/
-	void AddNode(int x, int y, std::string name)
+	void AddNode(int x, int y, bool solid)
 	{
-		m_graph.push_back(new Node(x, y, name));
+		m_graph.push_back(new Node(x, y, solid));
 	}
 
-	void AddArc(int x, int y, int x2, int y2)
+	//!Generate Graph
+	/*! Generates a graph with existing nodes, giving every node with an adjacent non-solid node neighbours it can path between.*/
+	void GenerateGraph()
 	{
-		GetNode(x, y)->arc.push_back(GetNode(x2, y2));
-		GetNode(x2, y2)->arc.push_back(GetNode(x, y));
-	}
+		int width = 0;
+		int height = 0;
+		for (int i = 0; i < m_graph.size(); i++)
+		{
+			m_graph.at(i)->arc.clear();
+			if (m_graph.at(i)->x > width)
+			{
+				width = m_graph.at(i)->x;
+			}
+			if (m_graph.at(i)->y > height)
+			{
+				height = m_graph.at(i)->y;
+			}
+		}
 
-	void AddArc(std::string x, std::string y)
-	{
-		GetNode(x)->arc.push_back(GetNode(y));
-		GetNode(y)->arc.push_back(GetNode(x));
+		for (int i = 0; i <= width; i+= 19)
+		{
+			for (int j = 0; j <= height; j+= 19)
+			{
+				Node * holder = GetNode(i, j);
+				if (!holder->solid)
+				{
+					if (holder->x - 1 >= 0 && !GetNode(i - 19, j)->solid)
+					{
+						holder->arc.push_back(GetNode(i - 19, j));
+					}
+					if (holder->y - 1 >= 0 && !GetNode(i, j - 19)->solid)
+					{
+						holder->arc.push_back(GetNode(i, j - 19));
+					}
+					if (holder->x + 1 < width && !GetNode(i + 19, j)->solid)
+					{
+						holder->arc.push_back(GetNode(i + 19, j));
+					}
+					if (holder->y + 1 < height && !GetNode(i, j + 19)->solid)
+					{
+						holder->arc.push_back(GetNode(i, j + 19));
+					}
+				}
+			}
+		}
+
+		int x = 9;
+
 	}
 
 	//!GetNode
@@ -76,19 +112,6 @@ public:
 		return m_graph.at(0);
 	}
 
-	Node* GetNode(std::string name)
-	{
-		for (int i = 0; i < m_graph.size(); i++)
-		{
-			if (m_graph.at(i)->name == name)
-			{
-				return m_graph.at(i);
-				break;
-			}
-		}
-		return m_graph.at(0);
-	}
-
 	Node* GetNode(int x)
 	{
 		return m_graph.at(x);
@@ -98,7 +121,6 @@ public:
 	{
 		return m_graph.size();
 	}
-
 
 	//!Path
 	/*! AStar is used here. It uses a priority queue to shift through each node. Upon reaching the end node at any stage, it immedietly finishes. Does not give best result but gives fastest!*/
@@ -151,6 +173,8 @@ public:
 
 			int sizeholder = neighbours.size();
 
+			std::vector<Node*> holdNeighbour;
+
 			while (neighbours.size() != 0 && !complete)
 			{
 				if (neighbours.front() != pq.top())
@@ -164,17 +188,25 @@ public:
 						{
 							complete = true;
 						}
-					}
+					}	
 					if (!neighbours.front()->marked)
 					{
-						pq.push(neighbours.front());
+						holdNeighbour.push_back(neighbours.front());
 						neighbours.front()->marked = true;
 					}
+					if (neighbours.front()->x == 19 && neighbours.front()->y == 342)
+					{
+						std::cout << "asddada" << std::endl;
+					}
 				}
-
 				neighbours.pop_front();
 			}
 			pq.pop();
+			for (int j = 0; j < holdNeighbour.size(); j++)
+			{
+				pq.push(holdNeighbour.at(j));
+			}
+			holdNeighbour.clear();
 		}
 
 		std::vector<Node> holder;
@@ -183,8 +215,10 @@ public:
 
 		std::cout << "Path is (" << holder.back().x << "," << holder.back().y << ")";
 
-		while (holder.back().previous != m_graph.at(0))
+		int loop = 0;
+		while (holder.back().previous != m_graph.at(0) && loop < width + height/2)
 		{
+			loop++;
 			holder.push_back(*holder.back().previous);
 			std::cout << ", (" << holder.back().x << "," << holder.back().y << ")";
 		}
