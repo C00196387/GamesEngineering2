@@ -40,6 +40,16 @@ void Hunter::Update(EventListener * e)
 	}
 	m_rect->X += velocityX;
 	m_rect->Y += velocityY;
+
+	if (path.size() > 1)
+	{
+		float distance = sqrt(((path.back().x - m_rect->X) * (path.back().x - m_rect->X)) + ((path.back().y - m_rect->Y) * (path.back().y - m_rect->Y)));
+
+		if (distance < 35 && distance > -35)
+		{
+			path.pop_back();
+		}
+	}
 }
 
 void Hunter::Collision(std::vector<Entity*>* e)
@@ -117,12 +127,5 @@ void Hunter::PathFind(std::vector<Entity*>* entity)
 		pholder = position2;
 
 		path = graphPointer->Path(position2->x, position2->y, position1->x, position1->y);
-	}
-
-	distance = sqrt(((path.back().x - m_rect->X) * (path.back().x - m_rect->X)) + ((path.back().y - m_rect->Y) * (path.back().y - m_rect->Y)));
-
-	if (path.size() > 1 && distance < 35 && distance > -35)
-	{
-		path.pop_back();
 	}
 }
