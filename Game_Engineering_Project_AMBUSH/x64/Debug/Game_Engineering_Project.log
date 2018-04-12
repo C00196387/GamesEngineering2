@@ -1,8 +1,8 @@
 ﻿  Hunter.cpp
-c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(122): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(156): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(174): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(147): warning C4101: 'pTemp': unreferenced local variable
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(133): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(167): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(185): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(158): warning C4101: 'pTemp': unreferenced local variable
 c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\hunter.cpp(21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\hunter.cpp(22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\hunter.cpp(41): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
@@ -14,4 +14,15 @@ c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\
 c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\hunter.cpp(105): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\hunter.cpp(113): warning C4305: '=': truncation from '__int64' to 'float'
 c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\hunter.cpp(117): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  main.cpp
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(133): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(167): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(185): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\graph.h(158): warning C4101: 'pTemp': unreferenced local variable
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\main.cpp(87): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'void *'
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\main.cpp(116): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'void *'
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\main.cpp(191): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\main.cpp(193): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jayden quinn\desktop\gamesengineering2\game_engineering_project_ambush\main.cpp(207): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  Generating Code...
   Game_Engineering_Project.vcxproj -> C:\Users\Jayden Quinn\Desktop\GamesEngineering2\Game_Engineering_Project_AMBUSH\x64\Debug\Game_Engineering_Project.exe

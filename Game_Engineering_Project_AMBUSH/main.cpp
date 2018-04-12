@@ -81,6 +81,7 @@ int Collision(void* data)
 		}
 		SDL_SemPost(gDataLock);
 		entityPool.at(index)->Collision(&entityPool);
+		SDL_Delay(1);
 	}
 
 	printf("%s finished!\n\n", data);
@@ -197,6 +198,9 @@ int main()
 	int countedFrames = 0;
 	fpsTimer.start();
 
+	int x = 0;
+	int y = 0;
+
 	while (!quit)
 	{
 
@@ -230,6 +234,13 @@ int main()
 				for (int i = 0; i < entityPool.size(); i++)
 				{
 					entityPool.at(i)->Update(listener);
+				}
+
+				if (x != entityPool.at(0)->Rect()->X && y != entityPool.at(0)->Rect()->Y)
+				{
+					x = entityPool.at(0)->Rect()->X;
+					y = entityPool.at(0)->Rect()->Y;
+					graph.WeightReset();
 				}
 
 				//Render Code

@@ -41,7 +41,7 @@ void Hunter::Update(EventListener * e)
 	m_rect->X += velocityX;
 	m_rect->Y += velocityY;
 
-	if (path.size() > 1)
+	if (path.size() > 2)
 	{
 		float distance = sqrt(((path.back().x - m_rect->X) * (path.back().x - m_rect->X)) + ((path.back().y - m_rect->Y) * (path.back().y - m_rect->Y)));
 

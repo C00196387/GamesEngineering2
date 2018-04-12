@@ -24,6 +24,7 @@ public:
 	int y;
 	int weight;
 	int heuristic;
+	int hyperWeight;
 	Node * previous;
 	bool marked = false;
 	bool solid = false;
@@ -37,6 +38,8 @@ public:
 class Graph
 {
 public:
+
+	int iterations = 0;
 	Graph() {}
 	~Graph() {}
 
@@ -45,6 +48,14 @@ public:
 	void AddNode(int x, int y, bool solid)
 	{
 		m_graph.push_back(new Node(x, y, solid));
+	}
+
+	void WeightReset()
+	{
+		for (int i = 0; i < m_graph.size(); i++)
+		{
+			m_graph.at(i)->hyperWeight = 1;
+		}
 	}
 
 	//!Generate Graph
@@ -179,7 +190,7 @@ public:
 			{
 				if (neighbours.front() != pq.top())
 				{
-					int distC = 1 + pq.top()->weight;
+					int distC = neighbours.front()->hyperWeight + pq.top()->weight;
 					if (distC < neighbours.front()->weight)
 					{
 						neighbours.front()->weight = distC;
@@ -213,14 +224,24 @@ public:
 
 		holder.push_back(*start);
 
-		std::cout << "Path is (" << holder.back().x << "," << holder.back().y << ")";
+		//std::cout << "Path is (" << holder.back().x << "," << holder.back().y << ")";
 
 		int loop = 0;
-		while (holder.back().previous != m_graph.at(0) && loop < width + height/2)
+		while (holder.back().previous != m_graph.at(0) && loop < (width + height)/2)
 		{
 			loop++;
 			holder.push_back(*holder.back().previous);
-			std::cout << ", (" << holder.back().x << "," << holder.back().y << ")";
+			holder.back().previous->hyperWeight = 5;
+			//std::cout << ", (" << holder.back().x << "," << holder.back().y << ")";
+		}
+
+		if (holder.size() <= 2 && iterations <= 15)
+		{
+			//iterations++;
+			int holder2 = rand() % dest->arc.size();
+			WeightReset();
+			holder = Path(x, y, dest->arc.at(holder2)->x, dest->arc.at(holder2)->y);
+			iterations = 0;
 		}
 
 		std::cout << "" << std::endl;
